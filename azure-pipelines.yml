@@ -27,7 +27,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: '--configuration $(buildConfiguration) --output $(build.ArtificatStagingDirectory)'
+    arguments: '--configuration $(buildConfiguration) --output'
 #- task: CopyFiles@2
   #inputs:
     #SourceFolder: '$(Build.SourcesDirectory)'
