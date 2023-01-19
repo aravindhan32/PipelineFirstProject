@@ -27,12 +27,12 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: '--configuration $(buildConfiguration) --output'
-#- task: CopyFiles@2
-  #inputs:
-    #SourceFolder: '$(Build.SourcesDirectory)'
-    #Contents: '**/bin/Release/net6.0/**'
-    #TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: '*/bin/Release/net6.0/**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   inputs:
