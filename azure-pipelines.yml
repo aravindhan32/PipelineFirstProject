@@ -1,33 +1,52 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
 
-variables:
-  buildConfiguration: 'Release'
 
-steps:
-- task: DotNetCoreCLI@2
-  displayName: 'Restore the Build'
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-- task: DotNetCoreCLI@2
-  displayName: 'Publish'
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+stages:
+  - stage: BuidStage
+    jobs:
+    - job: BuildJob
+      pool:
+        vmImage: ubuntu-latest
+        
+      variables:
+        buildConfiguration: 'Release'
+
+      steps:
+      - task: DotNetCoreCLI@2
+        displayName: 'Restore the Build'
+        inputs:
+          command: 'restore'
+          projects: '**/*.csproj'
+      - task: DotNetCoreCLI@2
+        displayName: 'Build'
+        inputs:
+          command: 'build'
+          projects: '**/*.csproj'
+          arguments: '--configuration $(buildConfiguration)'
+      - task: DotNetCoreCLI@2
+        displayName: 'Publish'
+        inputs:
+          command: 'publish'
+          publishWebProjects: true
+          arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
+
+  - stage: DeployeToDev
+      dependsOn:BuidStage
+    jobs:
+      - job: DevDeploy
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - download: current
+            artifact: drop
+
+
+
 
