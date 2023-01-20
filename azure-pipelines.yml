@@ -40,7 +40,7 @@ stages:
   - stage: DeployeToDev
       dependsOn:BuidStage
     jobs:
-      - job: DevDeploy
+      - job: Dev_Deploy
         pool:
           vmImage: ubuntu-latest
         steps:
