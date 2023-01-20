@@ -37,9 +37,9 @@ stages:
           ArtifactName: 'drop'
           publishLocation: 'Container'
 
-  - stage: deploy
+  - stage: Devdeploy
     jobs:
-    - job: DevDeploy
+    - job: DevJob
       pool:
         vmImage: ubuntu-latest
       steps:
