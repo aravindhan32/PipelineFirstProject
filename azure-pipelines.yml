@@ -6,6 +6,8 @@ trigger:
 stages:
   - stage: BuidStage
     jobs:
+    - deployment: DeployWeb
+      displayName: Deploy to web
     - job: BuildJob
       pool:
         vmImage: ubuntu-latest
@@ -37,15 +39,17 @@ stages:
           ArtifactName: 'drop'
           publishLocation: 'Container'
 
-  - stage: DeployeToDev
+  - stage: deploy
       dependsOn:BuidStage
     jobs:
-      - job: Dev_Deploy
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-          - download: current
-            artifact: drop
+    - deployment: DeployWeb
+      displayName: Deploy to web
+    - job: DevDeploy
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        - download: current
+          artifact: drop
 
 
 
