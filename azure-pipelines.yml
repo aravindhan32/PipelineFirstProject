@@ -6,8 +6,6 @@ trigger:
 stages:
   - stage: BuidStage
     jobs:
-    - deployment: DeployWeb
-      displayName: Deploy to web
     - job: BuildJob
       pool:
         vmImage: ubuntu-latest
@@ -42,8 +40,6 @@ stages:
   - stage: deploy
       dependsOn:BuidStage
     jobs:
-    - deployment: DeployWeb
-      displayName: Deploy to web
     - job: DevDeploy
       pool:
         vmImage: ubuntu-latest
