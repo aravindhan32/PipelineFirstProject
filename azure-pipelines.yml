@@ -22,9 +22,16 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/weather-api.$(Build.BuildNumber).zip'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/weather-api.$(Build.BuildNumber).zip'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop'
     publishLocation: 'Container'
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Pay-As-You-Go(e95636f3-11c2-4060-a0d1-0c573ee86fa8)'
+    appType: 'webApp'
+    WebAppName: 'testjetback'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
