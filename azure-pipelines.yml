@@ -25,6 +25,6 @@ steps:
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/weather-api.$(Build.BuildNumber).zip'
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/weather-api.$(Build.BuildNumber).zip'
-    ArtifactName: 'drop'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/weather-api.$(Build.BuildNumber).zip'
+    artifactName: 'drop'
     publishLocation: 'Container'
