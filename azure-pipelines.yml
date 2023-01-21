@@ -46,4 +46,4 @@ stages:
         azureSubscription: 'Pay-As-You-Go(e95636f3-11c2-4060-a0d1-0c573ee86fa8)'
         appType: 'webApp'
         WebAppName: 'testjetback'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
