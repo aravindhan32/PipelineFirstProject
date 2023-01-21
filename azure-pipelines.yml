@@ -29,6 +29,7 @@ steps:
     artifactName: 'drop'
     publishLocation: 'Container'
 - task: AzureRmWebAppDeployment@4
+  displayName: 'Build Pushing to Web App'
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'Pay-As-You-Go(e95636f3-11c2-4060-a0d1-0c573ee86fa8)'
