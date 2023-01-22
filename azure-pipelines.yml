@@ -1,51 +1,49 @@
 trigger:
 - main
-
-
-
 stages:
-  - stage: BuidStage
-    jobs:
-    - job: BuildJob
-      pool:
+- stage: 'BuildCode'
+  jobs: 
+  - job: 'BuildJob'
+    pool:
         vmImage: ubuntu-latest
-        
-      variables:
+    variables:
         buildConfiguration: 'Release'
-
-      steps:
-      - task: DotNetCoreCLI@2
-        displayName: 'Restore the Build'
-        inputs:
-          command: 'restore'
-          projects: '**/*.csproj'
-      - task: DotNetCoreCLI@2
-        displayName: 'Build'
-        inputs:
-          command: 'build'
-          projects: '**/*.csproj'
-          arguments: '--configuration $(buildConfiguration)'
-      - task: DotNetCoreCLI@2
-        displayName: 'Publish'
-        inputs:
-          command: 'publish'
-          publishWebProjects: true
-          arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
-
-  - stage: Devdeploy
-    jobs:
-    - job: DevJob
-      pool:
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore Build'
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet Build'
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Build'
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'drop'
+        publishLocation: 'Container'
+- stage: 'DevDeploy'
+  dependsOn: 'BuildCode'
+  jobs:
+  - job: 'DevDeploy'
+    pool:
         vmImage: ubuntu-latest
-      steps:
-        - download: current
-          artifact: drop
-
-
-
-
+    steps:
+    - download: current
+      artifact: 'drop'
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go(e95636f3-11c2-4060-a0d1-0c573ee86fa8)'
+        appType: 'webApp'
+        WebAppName: 'testjetback'
+        packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
